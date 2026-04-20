@@ -1,0 +1,583 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#1D9E75;--green-dark:#0F6E56;--green-deeper:#085041;--green-light:#E1F5EE;--green-mid:#9FE1CB;--coral:#D85A30;--coral-light:#FAECE7;--amber:#BA7517;--amber-light:#FAEEDA;--purple:#534AB7;--purple-light:#EEEDFE;}
+.site{font-family:var(--font-sans);max-width:860px;margin:0 auto;}
+.lang-bar{display:flex;justify-content:flex-end;padding:10px 0 6px;gap:6px;}
+.lang-btn{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s;}
+.lang-btn.active{background:var(--green);border-color:var(--green);color:#fff;}
+.hero{background:var(--green);border-radius:16px;padding:3rem 2.5rem;margin-bottom:2rem;color:#fff;position:relative;overflow:hidden;}
+.hero-eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--green-mid);margin-bottom:.75rem;}
+.hero-title{font-size:32px;font-weight:500;line-height:1.25;color:#fff;margin-bottom:.75rem;}
+.hero-subtitle{font-size:15px;color:#E1F5EE;line-height:1.75;max-width:560px;margin-bottom:1.5rem;}
+.hero-stats{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.hero-stat{background:rgba(255,255,255,.12);border-radius:10px;padding:.65rem 1rem;}
+.hero-stat-num{font-size:20px;font-weight:500;color:#fff;}
+.hero-stat-lbl{font-size:11px;color:var(--green-mid);}
+.nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:2rem;background:var(--color-background-secondary);border-radius:12px;padding:6px;}
+.nav-btn{flex:1;min-width:100px;padding:9px 8px;border-radius:8px;font-size:12px;font-weight:500;border:none;background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s;text-align:center;}
+.nav-btn.active{background:var(--color-background-primary);color:var(--green-dark);border:0.5px solid var(--color-border-tertiary);}
+.section{display:none;}
+.section.active{display:block;}
+.section-intro{font-size:15px;color:var(--color-text-secondary);line-height:1.8;margin-bottom:1.75rem;border-left:3px solid var(--green);padding-left:1rem;border-radius:0;}
+.h2{font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:1.25rem;}
+.h3{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:.6rem;}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1rem;}
+.card-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--green-dark);margin-bottom:.4rem;}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:1.25rem;}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:1.25rem;}
+.val-card{background:var(--color-background-secondary);border-radius:12px;padding:1.1rem 1.25rem;}
+.val-icon{width:32px;height:32px;border-radius:8px;background:var(--green-light);display:flex;align-items:center;justify-content:center;margin-bottom:.6rem;}
+.val-icon svg{width:16px;height:16px;stroke:var(--green-dark);fill:none;stroke-width:2;}
+.val-name{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:.35rem;}
+.val-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.65;}
+.val-bridge{font-size:11px;color:var(--green-dark);margin-top:.5rem;padding-top:.5rem;border-top:0.5px solid var(--color-border-tertiary);}
+.highlight{background:var(--green-light);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;}
+.highlight p{font-size:13px;color:var(--green-deeper);line-height:1.7;}
+.highlight strong{color:var(--green-dark);font-weight:500;}
+.warn-box{background:var(--amber-light);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;}
+.warn-box p{font-size:13px;color:#633806;line-height:1.7;}
+.warn-box strong{color:var(--amber);font-weight:500;}
+.danger-box{background:var(--coral-light);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;}
+.danger-box p{font-size:13px;color:#4A1B0C;line-height:1.7;}
+.scenario-wrap{margin-bottom:1.25rem;}
+.scenario-hd{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;background:var(--color-background-secondary);border-radius:10px;cursor:pointer;border:0.5px solid var(--color-border-tertiary);}
+.scenario-hd:hover{border-color:var(--green);}
+.scenario-title{font-size:14px;font-weight:500;color:var(--color-text-primary);}
+.scenario-chevron{font-size:12px;color:var(--color-text-tertiary);transition:transform .2s;}
+.scenario-chevron.open{transform:rotate(180deg);}
+.scenario-body{display:none;padding:1rem 1.1rem;border:0.5px solid var(--color-border-tertiary);border-top:none;border-radius:0 0 10px 10px;background:var(--color-background-primary);}
+.scenario-body.open{display:block;}
+.scenario-body p{font-size:13px;color:var(--color-text-secondary);line-height:1.75;margin-bottom:.6rem;}
+.scenario-body p:last-child{margin-bottom:0;}
+.scenario-body strong{color:var(--color-text-primary);font-weight:500;}
+.checklist-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);}
+.checklist-item:last-child{border-bottom:none;}
+.cb{width:18px;height:18px;min-width:18px;border:1.5px solid var(--color-border-secondary);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.cb.on{background:var(--green);border-color:var(--green);}
+.cb.on::after{content:'';width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
+.cl-text{font-size:13px;color:var(--color-text-primary);line-height:1.65;}
+.cl-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px;}
+.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;}
+.prog-bar{flex:1;height:6px;background:var(--color-background-secondary);border-radius:3px;}
+.prog-fill{height:100%;background:var(--green);border-radius:3px;transition:width .3s;}
+.prog-label{font-size:11px;color:var(--color-text-secondary);min-width:36px;text-align:right;}
+.quiz-q{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:1.1rem;line-height:1.55;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:1rem;}
+.qopt{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:9px;padding:10px 14px;font-size:13px;color:var(--color-text-primary);cursor:pointer;text-align:left;line-height:1.5;}
+.qopt:hover{border-color:var(--green);background:var(--green-light);color:var(--green-deeper);}
+.qopt.correct{background:var(--green-light);border-color:var(--green);color:var(--green-deeper);}
+.qopt.wrong{background:var(--coral-light);border-color:var(--coral);color:#4A1B0C;}
+.qopt:disabled{cursor:default;}
+.qfb{font-size:13px;color:var(--color-text-secondary);line-height:1.7;padding:.85rem 1rem;background:var(--color-background-secondary);border-radius:9px;margin-bottom:.85rem;display:none;}
+.qfb.show{display:block;}
+.qfb strong{color:var(--color-text-primary);font-weight:500;}
+.quiz-prog{height:4px;background:var(--color-background-secondary);border-radius:2px;margin-bottom:1.25rem;}
+.quiz-prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width .3s;}
+.score-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:500;}
+.btn{border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:8px 16px;font-size:13px;background:transparent;color:var(--color-text-primary);cursor:pointer;}
+.btn:hover{background:var(--color-background-secondary);}
+.btn-g{background:var(--green);border-color:var(--green);color:#fff;}
+.btn-g:hover{background:var(--green-dark);}
+.res-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:0.5px solid var(--color-border-tertiary);}
+.res-row:last-child{border-bottom:none;}
+.res-ico{width:40px;height:40px;min-width:40px;border-radius:10px;background:var(--green-light);display:flex;align-items:center;justify-content:center;}
+.res-ico svg{width:18px;height:18px;stroke:var(--green-dark);fill:none;stroke-width:2;}
+.res-name{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px;}
+.res-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6;}
+.res-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.tag{font-size:10px;padding:2px 8px;border-radius:8px;background:var(--green-light);color:var(--green-dark);font-weight:500;}
+.tag-coral{background:var(--coral-light);color:#712B13;}
+.tag-amber{background:var(--amber-light);color:#633806;}
+.tag-purple{background:var(--purple-light);color:#3C3489;}
+.story-card{background:var(--color-background-secondary);border-radius:14px;padding:1.5rem;margin-bottom:1rem;border-left:4px solid var(--green);border-radius:0 12px 12px 0;}
+.story-name{font-size:13px;font-weight:500;color:var(--green-dark);margin-bottom:.5rem;}
+.story-text{font-size:13px;color:var(--color-text-secondary);line-height:1.8;}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:1.5rem 0;}
+</style>
+
+<h2 class="sr-only" style="position:absolute;left:-9999px">Cuidando Nuestra Familia — an interactive guide for Latino families navigating disability, health care, and caregiving</h2>
+
+<div class="site">
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('en')" id="btn-en">English</button>
+  <button class="lang-btn" onclick="setLang('es')" id="btn-es">Español</button>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow" id="h-eyebrow">Community Resource Guide</div>
+  <div class="hero-title" id="h-title">Cuidando Nuestra Familia<br><span style="font-weight:400;font-size:24px">Caring for Our Family</span></div>
+  <div class="hero-subtitle" id="h-sub">A deep-dive guide for Latino families navigating disability, health care, and caregiving in the United States — grounded in research and rooted in our cultural values.</div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">1 in 4</div><div class="hero-stat-lbl" id="hs1">U.S. adults have a disability</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">62M+</div><div class="hero-stat-lbl" id="hs2">Latinos in the U.S.</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">70%</div><div class="hero-stat-lbl" id="hs3">of care provided by family</div></div>
+  </div>
+</div>
+
+<div class="nav" id="main-nav">
+  <button class="nav-btn active" onclick="showSec('values')" id="nav-values">Cultural Values</button>
+  <button class="nav-btn" onclick="showSec('health')" id="nav-health">Health Care</button>
+  <button class="nav-btn" onclick="showSec('caregiver')" id="nav-caregiver">Caregiving</button>
+  <button class="nav-btn" onclick="showSec('rights')" id="nav-rights">Your Rights</button>
+  <button class="nav-btn" onclick="showSec('stories')" id="nav-stories">Real Stories</button>
+  <button class="nav-btn" onclick="showSec('resources')" id="nav-resources">Resources</button>
+</div>
+
+<div id="s-values" class="section active">
+  <p class="section-intro" id="vi-intro">Latino cultural values are not barriers to accessing care — they are profound sources of resilience, community, and healing. Research consistently shows that families who draw on these values navigate disability with greater strength. This section explores six core values and how to apply them in disability and caregiving contexts.</p>
+  <div class="grid3" id="val-grid"></div>
+  <div class="divider"></div>
+  <div class="h2" id="vi-h2">How values interact with the system</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-tag" id="vi-tag1">Strength</div>
+      <div class="h3" id="vi-s1h">Familismo as a care network</div>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75" id="vi-s1p">Research by Magaña & Vanegas (2021) shows that Latino families of children with intellectual and developmental disabilities often rely on extensive kin networks for daily care. This informal support system reduces institutional dependence and provides emotional continuity — something the formal care system often cannot replicate. The key is recognizing this as a resource to build on, not a reason to provide less formal support.</p>
+    </div>
+    <div class="card">
+      <div class="card-tag" id="vi-tag2">Tension to navigate</div>
+      <div class="h3" id="vi-s2h">Marianismo and caregiver burden</div>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75" id="vi-s2p">The ideal of marianismo — in which women are selfless, nurturing, and sacrificing — means Latina caregivers often put their own health last. Studies by Mendez-Luck & Anthony (2016) found that U.S.-born and immigrant Mexican women differ in how strongly they internalize these beliefs, but both groups face elevated caregiver stress. Understanding this tension is the first step to finding balance without abandoning cultural identity.</p>
+    </div>
+    <div class="card">
+      <div class="card-tag" id="vi-tag3">Spiritual dimension</div>
+      <div class="h3" id="vi-s3h">Espiritualidad in autism families</div>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75" id="vi-s3p">Salkas et al. (2016) found that spirituality plays a significant protective role for Latino families of children with autism spectrum disorder. Families reported that faith gave meaning to their caregiving experience, helped them cope with uncertainty, and connected them to community. Providers who ignore or dismiss spiritual frameworks miss a powerful tool in family-centered care.</p>
+    </div>
+    <div class="card">
+      <div class="card-tag" id="vi-tag4">Research insight</div>
+      <div class="h3" id="vi-s4h">Acculturation and identity</div>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75" id="vi-s4p">Velcoff, Hernandez & Keys (2010) found that Latinos with disabilities who are more acculturated tend to access vocational rehabilitation differently than those less acculturated — neither pattern being superior, but both being shaped by the tension between the U.S. disability system's individualistic model and Latino collectivist values. Caminero-Santangelo (2012) further explores how Latinidad itself is a constructed, contested identity that varies by nationality, generation, and experience.</p>
+    </div>
+  </div>
+  <div class="highlight"><p id="vi-hl"><strong>Key takeaway:</strong> Cultural values are not static. They evolve across generations and immigration experiences. Effective support respects this complexity rather than applying a monolithic "Latino culture" lens. What helps one family may not apply to another.</p></div>
+</div>
+
+<div id="s-health" class="section">
+  <p class="section-intro" id="hi-intro">Latino families of individuals with disabilities face compounding barriers in the U.S. health and special education systems. This section examines those barriers in depth — and gives you concrete tools to navigate them.</p>
+  <div class="h2" id="hi-h1">Understanding the barriers</div>
+  <div id="barrier-accordions"></div>
+  <div class="divider"></div>
+  <div class="h2" id="hi-h2">Appointment preparation checklist</div>
+  <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.65" id="hi-sub">Check off each item before and during your next medical or IEP appointment. Progress is saved as you go.</p>
+  <div class="card" id="checklist-wrap"></div>
+  <div class="divider"></div>
+  <div class="h2" id="hi-h3">Special education and the IEP process</div>
+  <div class="card">
+    <div class="card-tag">Research finding</div>
+    <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75;margin-bottom:.75rem" id="hi-iep1">Mortier & Arias (2023) documented how Latina mothers navigate special education, finding that the system often assumes families understand concepts like "IEP," "due process," and "least restrictive environment" — when in fact these are deeply technical and culturally unfamiliar concepts. Language barriers compound the problem: parents who don't speak English fluently are often handed translated documents without explanation.</p>
+    <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75" id="hi-iep2">Rios & Burke (2021) reviewed the literature and identified key facilitators of positive special education experiences: having a bilingual advocate, building personal relationships with teachers (personalismo), and connecting with other Latino parents who have navigated the system. Barriers included transportation, work schedule conflicts, mistrust of government institutions, and lack of culturally adapted materials.</p>
+  </div>
+  <div class="warn-box"><p id="hi-warn"><strong>Know this:</strong> Under IDEA, schools must provide evaluation, IEP documents, and meeting notices in your home language at no cost to you. If this is not happening, you have the right to request it formally and to bring a bilingual advocate to any meeting.</p></div>
+</div>
+
+<div id="s-caregiver" class="section">
+  <p class="section-intro" id="ci-intro">Caregiving is an act of profound love — and also one of the most demanding roles a person can hold. This section goes deep on the physical, emotional, and systemic dimensions of caregiving in Latino families, and offers evidence-based strategies for sustaining yourself while caring for others.</p>
+  <div class="h2" id="ci-h1">The caregiver experience in Latino families</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-tag">Alzheimer's & dementia</div>
+      <div class="h3" id="ci-alz-h">Caring for a parent with dementia</div>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75" id="ci-alz-p">Jaldin et al. (2023) studied Latino family caregivers of individuals with Alzheimer's and related dementias, finding that familismo strongly shaped how families understood the caregiver role — viewing it as a moral obligation and source of meaning rather than a burden. However, this framing also made it harder for caregivers to set limits or accept outside help. The study highlights the need for culturally tailored support that honors this commitment while offering practical relief.</p>
+    </div>
+    <div class="card">
+      <div class="card-tag">Fathers & disability stigma</div>
+      <div class="h3" id="ci-dad-h">Fathers with a child with a disability</div>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75" id="ci-dad-p">Mogro-Wilson et al. (2024) found that Latino cultural concepts of fatherhood — machismo, being the provider and protector — significantly predicted stigma levels among fathers of children with disabilities. Fathers who felt their child's disability "reflected on them" reported higher stigma and lower engagement with services. Programs that directly address Latino fatherhood identity, rather than treating all parents the same, lead to better family outcomes.</p>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="h2" id="ci-h2">Evidence-based programs for Latino caregivers</div>
+  <div id="prog-cards"></div>
+  <div class="divider"></div>
+  <div class="h2" id="ci-h3">Caregiver self-assessment</div>
+  <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.65" id="ci-self-sub">Rate how you are currently doing in each area. This is for reflection only — there are no wrong answers.</p>
+  <div id="self-assess"></div>
+  <div class="danger-box" style="margin-top:1rem"><p id="ci-crisis"><strong>If you are in crisis:</strong> Caregiver burnout is a recognized medical condition. If you feel chronically exhausted, detached from your loved one, or hopeless, please reach out to a promotora, community health worker, or call SAMHSA's helpline: 1-800-662-4357 (free, confidential, available in Spanish).</p></div>
+</div>
+
+<div id="s-rights" class="section">
+  <p class="section-intro" id="ri-intro">The U.S. legal system provides significant protections for individuals with disabilities and their families — regardless of immigration status. Many Latino families don't know these rights exist or how to use them. This section covers the major laws, common misunderstandings, and includes an interactive quiz to test your knowledge.</p>
+  <div class="h2" id="ri-h1">Key laws you should know</div>
+  <div class="grid2" id="laws-grid"></div>
+  <div class="divider"></div>
+  <div class="h2" id="ri-h2">Interactive rights quiz</div>
+  <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1.25rem;line-height:1.65" id="ri-quizsub">7 questions. Each question includes a full explanation. Take it as many times as you like.</p>
+  <div class="card" id="quiz-wrap"></div>
+  <div class="divider"></div>
+  <div class="h2" id="ri-h3">Liberation and advocacy in practice</div>
+  <div class="card">
+    <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75;margin-bottom:.75rem" id="ri-lib1">Balcazar et al. (2012) introduced a "liberation" framework for understanding how Latino immigrant families of children with disabilities move from passivity to active advocacy. The process has three phases: (1) critical consciousness — recognizing that your child has rights and that systems can and must respond; (2) skill building — learning how to communicate with schools, providers, and government agencies; and (3) social action — joining or forming networks that push for systemic change.</p>
+    <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75" id="ri-lib2">This framework is not abstract — it has been applied in community settings across Chicago and beyond. Organizations like Grupo Salto explicitly use capacity-building approaches (Balcazar, Keys & Suárez-Balcázar, 2021) to help Latinos with disabilities develop self-determination, navigate independent living, and advocate for policy change at the local level.</p>
+  </div>
+</div>
+
+<div id="s-stories" class="section">
+  <p class="section-intro" id="sti-intro">Behind every statistic is a family. These composite narratives — drawn from research themes — illustrate the real challenges and strengths of Latino families navigating disability. Names are fictional; experiences are drawn from documented studies.</p>
+  <div id="stories-list"></div>
+  <div class="divider"></div>
+  <div class="h2" id="sti-h2">What the research tells us</div>
+  <div class="highlight"><p id="sti-hl1"><strong>Suárez-Balcázar et al. (2025)</strong> developed a conceptual model for co-creating culturally tailored interventions with Latina immigrant caregivers of children with disabilities. The model centers community participation — caregivers are not just recipients of programs but co-designers. This participatory approach leads to higher engagement, better outcomes, and more sustainable programs.</p></div>
+  <div class="highlight"><p id="sti-hl2"><strong>Montenegro et al. (2022)</strong> surveyed caregivers of autistic children across Latin America and found that stigma and service barriers are not unique to the U.S. — they are pervasive across Argentina, Colombia, Ecuador, and Peru. Families reported that perceived stigma was the single strongest predictor of delayed help-seeking, more so than income or geographic access to services.</p></div>
+</div>
+
+<div id="s-resources" class="section">
+  <p class="section-intro" id="rei-intro">Below is a curated list of organizations, hotlines, and programs specifically serving Latino families navigating disability. All resources are either Spanish-language accessible or have bilingual staff.</p>
+  <div class="card" id="res-list"></div>
+  <div class="divider"></div>
+  <div class="h2" id="rei-h2">Navigating the system — a quick reference</div>
+  <div class="grid2" id="quickref-grid"></div>
+  <div class="highlight"><p id="rei-hl"><strong>Important:</strong> Many protections under the ADA, IDEA, and Title VI of the Civil Rights Act apply to all residents of the United States regardless of immigration status. You do not need to be a citizen to access disability services, public school special education, or federally funded health programs.</p></div>
+</div>
+
+</div>
+
+<script>
+const T = {
+  en: {
+    nav:['Cultural Values','Health Care','Caregiving','Your Rights','Real Stories','Resources'],
+    eyebrow:'Community Resource Guide',
+    sub:'A deep-dive guide for Latino families navigating disability, health care, and caregiving in the United States — grounded in research and rooted in our cultural values.',
+    hs:['U.S. adults have a disability','Latinos in the U.S.','of care provided by family'],
+    vi_intro:'Latino cultural values are not barriers to accessing care — they are profound sources of resilience, community, and healing. Research consistently shows that families who draw on these values navigate disability with greater strength. This section explores six core values and how to apply them in disability and caregiving contexts.',
+    vi_h2:'How values interact with the system',
+    vi_tags:['Strength','Tension to navigate','Spiritual dimension','Research insight'],
+    vi_sh:['Familismo as a care network','Marianismo and caregiver burden','Espiritualidad in autism families','Acculturation and identity'],
+    vi_sp:[
+      'Research by Magaña & Vanegas (2021) shows that Latino families of children with intellectual and developmental disabilities rely on extensive kin networks for daily care. This informal support system reduces institutional dependence and provides emotional continuity — something the formal care system often cannot replicate. The key is recognizing this as a resource to build on, not a reason to provide less formal support.',
+      'The ideal of marianismo — in which women are selfless, nurturing, and sacrificing — means Latina caregivers often put their own health last. Studies by Mendez-Luck & Anthony (2016) found that both U.S.-born and immigrant Mexican women face elevated caregiver stress, though they internalize these beliefs differently. Understanding this tension is the first step to finding balance without abandoning cultural identity.',
+      'Salkas et al. (2016) found that spirituality plays a significant protective role for Latino families of children with autism spectrum disorder. Families reported that faith gave meaning to their caregiving experience, helped them cope with uncertainty, and connected them to community. Providers who ignore spiritual frameworks miss a powerful tool in family-centered care.',
+      'Velcoff, Hernandez & Keys (2010) found that acculturation shapes how Latinos with disabilities access vocational rehabilitation — neither highly nor less acculturated patterns being superior, but both shaped by the tension between the U.S. disability system\'s individualistic model and Latino collectivist values. Caminero-Santangelo (2012) further explores how Latinidad itself is a constructed, contested identity that varies by nationality, generation, and experience.'
+    ],
+    vi_hl:'Key takeaway: Cultural values are not static. They evolve across generations and immigration experiences. Effective support respects this complexity rather than applying a monolithic "Latino culture" lens. What helps one family may not apply to another.',
+    values:[
+      {name:'Familismo',desc:'The centrality of family as the primary support network. Decisions are made collectively; no one faces disability alone. Research shows this buffers against isolation and improves mental health outcomes for caregivers.',bridge:'Apply it: Engage the whole family in care decisions, not just the primary caregiver.'},
+      {name:'Respeto',desc:'Deep respect for elders, authority figures, and providers. This can support therapeutic relationships — but may also lead families to not question a diagnosis or treatment plan when they should.',bridge:'Apply it: You can be respectful AND ask for a second opinion. Respeto goes both ways.'},
+      {name:'Marianismo',desc:'The tradition of female selflessness and sacrifice. A source of profound caregiving dedication — but also a driver of burnout, depression, and ignored personal health needs among Latina caregivers.',bridge:'Apply it: Recognize when marianismo becomes self-harm. Seeking rest is not weakness.'},
+      {name:'Espiritualidad',desc:'Faith and spiritual practice as coping mechanisms. Protective for Latino autism families (Salkas et al., 2016). Connects families to community, provides meaning, and reduces anxiety about the unknown.',bridge:'Apply it: Include spiritual leaders and faith community in the care support network.'},
+      {name:'Personalismo',desc:'Preference for warm, personal relationships over formal or bureaucratic interactions. Key to building trust with doctors, teachers, and service providers. Cold or impersonal providers are often distrusted.',bridge:'Apply it: Seek providers who take time to know you personally. It\'s a reasonable expectation.'},
+      {name:'Simpatía',desc:'Prioritizing harmony, pleasantness, and avoiding conflict. Can make families reluctant to challenge providers or advocate forcefully — even when they should. Awareness helps balance diplomacy with assertion.',bridge:'Apply it: Simpatía and advocacy are compatible. You can push back with warmth.'}
+    ],
+    barriers:[
+      {title:'Language and communication barriers',body:'<p>Xu et al. (2022) conducted a scoping review of barriers to service access for immigrant families of children with developmental disabilities, finding that language barriers were the single most cited obstacle — not just in medical settings, but in schools, therapy offices, and government agencies. Families reported relying on children to interpret, which places enormous emotional and cognitive burdens on kids.</p><p><strong>What you can do:</strong> Under Title VI of the Civil Rights Act, federally funded programs must provide a qualified interpreter at no cost. This includes most hospitals, schools, and social service agencies. Request this in writing before your appointment.</p>'},
+      {title:'Immigration status and fear of systems',body:'<p>Fear of deportation or documentation scrutiny keeps many Latino immigrant families from accessing services their children are legally entitled to. Studies find that families sometimes avoid hospitals, schools, and government programs even when their children are U.S. citizens — because they themselves are undocumented.</p><p><strong>What you can do:</strong> IDEA and ADA protections apply to children regardless of immigration status. School special education departments cannot ask about immigration status. Many health clinics (FQHCs) do not report to immigration authorities. Know your rights before avoiding care.</p>'},
+      {title:'Lack of culturally competent providers',body:'<p>Rios, Aleman-Tovar & Burke (2020) found that Latina mothers of children with ASD reported high stress partly because providers failed to understand their cultural context — dismissing familismo as enmeshment, misinterpreting respeto as passivity, or ignoring the role of religion. Culturally incompetent care leads to misdiagnosis, undertreatment, and families disengaging from services.</p><p><strong>What you can do:</strong> Ask providers directly: "Are you familiar with working with Latino families?" Request referrals to providers with documented cultural competency training. Community health workers (promotoras) can bridge the gap.</p>'},
+      {title:'Socioeconomic and logistical barriers',body:'<p>Even when families know their rights and have found good providers, practical barriers persist: lack of transportation, inflexible work schedules, no childcare, cost of co-pays, and distance from specialized services. These are not personal failures — they are structural inequities that fall disproportionately on Latino immigrant families.</p><p><strong>What you can do:</strong> Many disability service organizations offer transportation assistance, sliding-scale fees, and flexible scheduling. Ask explicitly about accommodations. Community organizations like Grupo Salto can help navigate these logistics.</p>'}
+    ],
+    checklist:[
+      {text:'Request an interpreter in writing at least 48 hours before the appointment',sub:'This is your legal right under Title VI — document the request.'},
+      {text:'Write down your top 3 concerns or questions the night before',sub:'Studies show families forget up to 80% of what they planned to ask when in a stressful appointment.'},
+      {text:'Bring a trusted support person — family member, promotora, or advocate',sub:'Having another set of ears improves recall and reduces anxiety.'},
+      {text:'Ask the provider to repeat back your child\'s diagnosis in plain language',sub:'If they cannot explain it simply, ask them to try again.'},
+      {text:'Request all written materials in Spanish if available',sub:'This is especially important for IEP documents and medication instructions.'},
+      {text:'Ask: "What happens next, and who is responsible for each step?"',sub:'Follow-up gaps are the most common cause of delayed care in complex disability cases.'},
+      {text:'Take notes or ask permission to record the appointment',sub:'Memory is unreliable under stress. Notes protect you and your child.'},
+      {text:'Before leaving: confirm the next appointment date, time, and location',sub:'Scheduling confusion is one of the top reasons for missed follow-ups.'}
+    ],
+    progs:[
+      {tag:'Autism / IDD',name:'Parents Taking Action (PTA)',desc:'A psychoeducational intervention developed by Magaña, Lopez & Machalicek (2017) specifically for Latino parents of children with ASD. Culturally adapted with Latino family values at its center — covers advocacy, daily living skills, and communication strategies. Evaluated in Colombia by Garcia Torres et al. (2024), showing effectiveness across Latin American contexts.'},
+      {tag:'Dementia caregivers',name:'COCO — Caring of Caregivers Organically',desc:'Developed by Dr. Judith Rocha (2020), this health education program for Latinas caring for family members with Alzheimer\'s and related dementias uses a group-based, culturally grounded model. Participants report reductions in caregiver stress, improved health behaviors, and stronger social connection.'},
+      {tag:'Cultural adaptation',name:'Ecological Validity Model (EVM)',desc:'Martinez-Torres et al. (2021) describe a framework for adapting interventions for the Latinx community using the EVM — ensuring that language, metaphors, content, goals, methods, and context all align with the target community. This is the gold standard for avoiding one-size-fits-all approaches.'}
+    ],
+    selfItems:['Physical health (are you getting medical care for yourself?)','Emotional wellbeing (do you have someone to talk to?)','Social connection (are you avoiding isolation?)','Rest and sleep (are you getting enough?)','Setting limits (can you say no sometimes?)'],
+    laws:[
+      {name:'Americans with Disabilities Act (ADA)',tag:'Civil rights law',desc:'Prohibits discrimination against people with disabilities in employment, public services, and public accommodations. Applies to all residents, not just citizens. The ADA National Network offers Spanish-language outreach and free information (1-800-949-4232).'},
+      {name:'IDEA — Individuals with Disabilities Education Act',tag:'Education law',desc:'Guarantees free appropriate public education (FAPE) for all children with disabilities ages 3-21. Schools must evaluate, identify, and serve eligible children regardless of immigration status. Parents have full rights to participate in IEP meetings, disagree with decisions, and request due process.'},
+      {name:'Section 504 of the Rehabilitation Act',tag:'Anti-discrimination',desc:'Provides accommodations for students with disabilities who may not qualify for an IEP. Covers a broader range of conditions and is enforced in any school receiving federal funding. A 504 plan can include modifications like extended time, a quiet testing environment, or medical accommodations.'},
+      {name:'Title VI — Civil Rights Act',tag:'Language access',desc:'Requires federally funded programs (hospitals, schools, social services) to provide meaningful access to people with limited English proficiency. This means free qualified interpreters, translated documents, and bilingual staff where populations require it. File complaints with the Office for Civil Rights.'}
+    ],
+    quiz:[
+      {q:'Can a public school ask about a family\'s immigration status when evaluating a child for special education services?',opts:['Yes — they need this to determine eligibility','No — immigration status is irrelevant to IDEA eligibility','Only if the child was born outside the U.S.','Only in certain states'],ans:1,fb:'IDEA guarantees free appropriate public education for all children with disabilities ages 3-21 in the U.S., regardless of immigration status. Schools cannot use immigration status as a factor in eligibility decisions.'},
+      {q:'Under the ADA, are businesses required to make reasonable accommodations for people with disabilities?',opts:['Only for employees, not customers','Yes — for both employees and customers in most public-facing businesses','Only if the business has more than 500 employees','Only for physical disabilities'],ans:1,fb:'The ADA requires reasonable accommodations in employment (Title I) and in places of public accommodation (Title III), including stores, restaurants, and service providers, regardless of business size in most cases.'},
+      {q:'If you disagree with your child\'s IEP, what is your first formal step?',opts:['Hire a lawyer immediately','Write a letter to the principal','Request mediation or file a due process complaint','Accept it and request a revision next year'],ans:2,fb:'Under IDEA, parents can request mediation (a neutral third party helps resolve the dispute) or file a due process complaint. Both are free options. You do not need a lawyer, though legal aid organizations can help if needed.'},
+      {q:'Is a hospital legally required to provide a Spanish interpreter at no cost to you?',opts:['Only if you pay for it','No — that is only required for written materials','Yes — under Title VI of the Civil Rights Act, if the hospital receives federal funding','Only in states with official bilingual policies'],ans:2,fb:'Title VI requires all federally funded programs — including most hospitals, clinics, and social service agencies — to provide free qualified interpreters for people with limited English proficiency. Using a family member as interpreter is not acceptable under this standard.'},
+      {q:'What is a "504 plan" and how does it differ from an IEP?',opts:['A 504 plan is more comprehensive than an IEP','They are the same thing','A 504 plan provides accommodations without special education services; an IEP provides specialized instruction','A 504 plan is only for adults'],ans:2,fb:'A 504 plan provides reasonable accommodations (like extended time or seating modifications) for students with disabilities who don\'t qualify for special education under IDEA. An IEP provides specialized instruction and is more intensive. A student can have one but not both.'},
+      {q:'Which of the following is NOT a right parents have under IDEA?',opts:['Participating in IEP meetings','Requesting an independent educational evaluation','Choosing which school their child attends in any district','Receiving IEP documents in their home language'],ans:2,fb:'Under IDEA, parents can participate in meetings, request independent evaluations, and receive documents in their home language. However, school placement decisions (which school within the district) are made by the IEP team, and parents cannot unilaterally select any school in any district.'},
+      {q:'Can a Latino family with undocumented members access Medicaid-funded disability services for their U.S.-born child with a disability?',opts:['No — the whole family must have legal status','Yes — U.S.-born children are citizens and eligible for services','Only if the parents also apply separately','Only in sanctuary cities'],ans:1,fb:'U.S.-born children are citizens regardless of their parents\' immigration status. As citizens, they are fully eligible for Medicaid, CHIP, and publicly funded disability services. Parents\' undocumented status does not affect a citizen child\'s eligibility.'}
+    ],
+    stories:[
+      {name:'María, Chicago — caring for a son with autism',text:'María came to the U.S. from Mexico when she was 22. When her son Emiliano was diagnosed with autism at age 3, she was handed an IEP document in English and told to sign it. She didn\'t understand what she was agreeing to. For two years, Emiliano received minimal services because María didn\'t know she could push back. Then a promotora from a local community organization explained her rights under IDEA. María requested a new IEP meeting, brought an interpreter, and advocated for applied behavior analysis services. Emiliano\'s development improved significantly. "I didn\'t know I had a voice," she says. "Now I use it."'},
+      {name:'Roberto, Texas — living with a spinal cord injury',text:'Roberto, 34, was injured in a workplace accident and acquired a spinal cord injury. His employer initially denied accommodations and he was let go. Roberto\'s family — including his parents, siblings, and extended kin — rallied around him, providing daily care, transportation, and emotional support. His familismo was his survival network. But when his sister — his primary caregiver — began showing signs of burnout, the family had to confront how marianismo had caused them to expect too much from her without asking. They redistributed care tasks and connected with a local vocational rehabilitation program. Roberto is now employed again.'},
+      {name:'Carmen, New York — caring for her mother with Alzheimer\'s',text:'Carmen, a 58-year-old Colombian immigrant, was the only English speaker in her family and became the default caregiver for her mother, who developed Alzheimer\'s at 72. She balanced a full-time job, two children, and 24-hour caregiving responsibilities. She never complained — simpatía and marianismo ran deep. When she collapsed from exhaustion and was hospitalized, her doctor identified caregiver burnout. A social worker connected her with a COCO program specifically designed for Latina caregivers. The group gave Carmen permission to name her suffering and share responsibility. "We don\'t talk about these things in our families," she says. "But we have to."'}
+    ],
+    sti_h2:'What the research tells us',
+    sti_hl1:'Suárez-Balcázar et al. (2025) developed a conceptual model for co-creating culturally tailored interventions with Latina immigrant caregivers of children with disabilities. The model centers community participation — caregivers are not just recipients of programs but co-designers. This participatory approach leads to higher engagement, better outcomes, and more sustainable programs.',
+    sti_hl2:'Montenegro et al. (2022) surveyed caregivers of autistic children across Latin America and found that stigma and service barriers are not unique to the U.S. — they are pervasive across Argentina, Colombia, Ecuador, and Peru. Perceived stigma was the single strongest predictor of delayed help-seeking.',
+    resources:[
+      {name:'ADA National Network — Spanish Language Outreach',desc:'Free ADA information, referrals, and resources in Spanish. Staffed by trained specialists. Podcast Episode 122 covers Hispanic/Latino communities specifically.',tags:['Rights','Spanish','Free'],tagClasses:['','','']},
+      {name:'SAMHSA Helpline',desc:'Free, confidential mental health and substance use treatment referrals. Available in Spanish. 1-800-662-4357. Especially relevant for caregiver mental health.',tags:['Mental health','Spanish','Free'],tagClasses:['tag-coral','','']},
+      {name:'Federally Qualified Health Centers (FQHCs)',desc:'Community health centers offering sliding-scale fees regardless of ability to pay or immigration status. Many have bilingual staff and promotoras on site. Find one at findahealthcenter.hrsa.gov.',tags:['Health care','Sliding scale'],tagClasses:['tag-amber','tag-purple']},
+      {name:'Grupo Salto',desc:'Community organization based in Chicago empowering Latinos with disabilities toward independent living, advocacy, and rights. Uses a capacity-building approach developed by Balcazar et al.',tags:['Advocacy','Chicago','IDD'],tagClasses:['','tag-amber','tag-coral']},
+      {name:'Parents Taking Action (PTA)',desc:'Culturally adapted parent training for Latino families of children with ASD and intellectual/developmental disabilities. Developed by Magaña, Lopez & Machalicek. Available through select providers and universities.',tags:['Parent training','ASD/IDD'],tagClasses:['tag-purple','tag-coral']},
+      {name:'Vocational Rehabilitation (State VR)',desc:'State-funded employment and rehabilitation services for people with disabilities. Lee et al. (2023) identify strengths and challenges specifically for Hispanic clients. Ask about culturally competent counselors.',tags:['Employment','All disabilities'],tagClasses:['tag-amber','']},
+      {name:'IDEA Parent Centers (PTIs)',desc:'Every state has a federally funded Parent Training and Information Center that provides free help navigating special education. Many have bilingual staff. Find yours at parentcenterhub.org.',tags:['Education','IEP','Free'],tagClasses:['','tag-purple','']},
+    ],
+    qref:[
+      {tag:'If you are denied services',text:'Request denial in writing. Ask what the specific legal basis is. Contact your state Protection & Advocacy organization for free legal help.'},
+      {tag:'If you need an interpreter',text:'Tell the scheduler before your appointment. Arrive early and ask again at check-in. If denied, ask to speak to a patient advocate or supervisor.'},
+      {tag:'If you disagree with an IEP',text:'Write a letter stating your disagreement within 10 days. Request mediation. Contact your state Parent Training and Information Center (PTI) for free guidance.'},
+      {tag:'If you experience discrimination',text:'File a complaint with the U.S. Dept of Education Office for Civil Rights (for schools) or HHS Office for Civil Rights (for health providers). Both accept complaints online and in Spanish.'}
+    ],
+    rei_hl:'Important: Many protections under the ADA, IDEA, and Title VI of the Civil Rights Act apply to all residents of the United States regardless of immigration status. You do not need to be a citizen to access disability services, public school special education, or federally funded health programs.',
+    ri_h3:'Liberation and advocacy in practice',
+    ri_lib1:'Balcazar et al. (2012) introduced a "liberation" framework for Latino immigrant families of children with disabilities. The process has three phases: (1) critical consciousness — recognizing that your child has rights and that systems must respond; (2) skill building — learning to communicate with schools, providers, and agencies; and (3) social action — joining networks that push for systemic change.',
+    ri_lib2:'This framework has been applied in Chicago and beyond. Organizations like Grupo Salto use capacity-building approaches (Balcazar, Keys & Suárez-Balcázar, 2021) to help Latinos with disabilities develop self-determination, navigate independent living, and advocate for policy change.'
+  },
+  es:{
+    nav:['Valores Culturales','Atención Médica','Cuidar a Otros','Sus Derechos','Historias Reales','Recursos'],
+    eyebrow:'Guía de Recursos Comunitarios',
+    sub:'Una guía profunda para familias latinas que navegan la discapacidad, el sistema de salud y el cuidado de seres queridos en Estados Unidos — basada en investigación y arraigada en nuestros valores culturales.',
+    hs:['adultos en EE.UU. tienen una discapacidad','Latinos en EE.UU.','del cuidado lo provee la familia'],
+    vi_intro:'Los valores culturales latinos no son obstáculos para acceder a servicios — son fuentes profundas de resiliencia, comunidad y sanación. Las investigaciones muestran consistentemente que las familias que se apoyan en estos valores navegan la discapacidad con mayor fortaleza. Esta sección explora seis valores clave y cómo aplicarlos en contextos de discapacidad y cuidado.',
+    vi_h2:'Cómo interactúan los valores con el sistema',
+    vi_tags:['Fortaleza','Tensión a navegar','Dimensión espiritual','Perspectiva investigativa'],
+    vi_sh:['El familismo como red de apoyo','El marianismo y la carga del cuidador','La espiritualidad en familias con autismo','Aculturación e identidad'],
+    vi_sp:[
+      'Investigaciones de Magaña y Vanegas (2021) muestran que las familias latinas de niños con discapacidades intelectuales y del desarrollo se apoyan en amplias redes familiares para el cuidado diario. Este sistema de apoyo informal reduce la dependencia institucional y ofrece continuidad emocional — algo que el sistema formal de atención frecuentemente no puede replicar.',
+      'El ideal del marianismo — en que la mujer es abnegada, cuidadosa y sacrificada — hace que las cuidadoras latinas a menudo pongan su propia salud en último lugar. Estudios de Mendez-Luck y Anthony (2016) encontraron que tanto las mujeres mexicanas nacidas en EE.UU. como las inmigrantes enfrentan estrés elevado como cuidadoras. Entender esta tensión es el primer paso para encontrar equilibrio sin abandonar la identidad cultural.',
+      'Salkas et al. (2016) encontraron que la espiritualidad tiene un papel protector significativo para familias latinas de niños con autismo. Las familias reportaron que la fe les daba sentido a su experiencia de cuidado, les ayudaba a manejar la incertidumbre y las conectaba a la comunidad. Los proveedores que ignoran los marcos espirituales pierden una herramienta poderosa.',
+      'Velcoff, Hernandez y Keys (2010) encontraron que el nivel de aculturación influye en cómo los latinos con discapacidades acceden a rehabilitación vocacional — ningún patrón siendo superior, pero ambos moldeados por la tensión entre el modelo individualista del sistema estadounidense y los valores colectivistas latinos. Caminero-Santangelo (2012) explora cómo la latinidad misma es una identidad construida y contestada.'
+    ],
+    vi_hl:'Conclusión clave: Los valores culturales no son estáticos. Evolucionan a través de generaciones y experiencias migratorias. El apoyo efectivo respeta esta complejidad en lugar de aplicar una visión monolítica de "la cultura latina". Lo que ayuda a una familia puede no aplicar a otra.',
+    values:[
+      {name:'Familismo',desc:'La centralidad de la familia como red de apoyo principal. Las decisiones se toman colectivamente; nadie enfrenta la discapacidad solo. Las investigaciones muestran que esto protege contra el aislamiento y mejora los resultados de salud mental de los cuidadores.',bridge:'Aplícalo: Involucra a toda la familia en las decisiones de cuidado, no solo al cuidador principal.'},
+      {name:'Respeto',desc:'El respeto profundo hacia los mayores, figuras de autoridad y proveedores. Puede fortalecer las relaciones terapéuticas — pero también puede llevar a las familias a no cuestionar un diagnóstico o plan de tratamiento cuando deberían hacerlo.',bridge:'Aplícalo: Puedes ser respetuoso Y pedir una segunda opinión. El respeto es recíproco.'},
+      {name:'Marianismo',desc:'La tradición de abnegación y sacrificio femenino. Fuente de profunda dedicación al cuidado — pero también causa de agotamiento, depresión y necesidades de salud ignoradas entre las cuidadoras latinas.',bridge:'Aplícalo: Reconoce cuándo el marianismo se convierte en auto-daño. Buscar descanso no es debilidad.'},
+      {name:'Espiritualidad',desc:'La fe y la práctica espiritual como mecanismos de afrontamiento. Protector para familias latinas con autismo (Salkas et al., 2016). Conecta a las familias con la comunidad, da sentido y reduce la ansiedad ante lo desconocido.',bridge:'Aplícalo: Incluye líderes espirituales y la comunidad de fe en la red de apoyo.'},
+      {name:'Personalismo',desc:'Preferencia por relaciones cálidas y personales sobre interacciones formales o burocráticas. Clave para generar confianza con médicos, maestros y proveedores de servicios.',bridge:'Aplícalo: Busca proveedores que se tomen tiempo para conocerte. Es una expectativa razonable.'},
+      {name:'Simpatía',desc:'Priorizar la armonía y evitar el conflicto. Puede hacer que las familias sean reacias a confrontar a proveedores o abogar con firmeza. La conciencia sobre esto ayuda a equilibrar diplomacia y asertividad.',bridge:'Aplícalo: La simpatía y la defensa de derechos son compatibles. Puedes defender con calidez.'}
+    ],
+    barriers:[
+      {title:'Barreras de idioma y comunicación',body:'<p>Xu et al. (2022) realizaron una revisión amplia de barreras para familias inmigrantes de niños con discapacidades del desarrollo, encontrando que las barreras de idioma fueron el obstáculo más citado — no solo en entornos médicos, sino en escuelas, consultorios de terapia y agencias gubernamentales. Las familias reportaron depender de sus hijos como intérpretes, lo que genera una enorme carga emocional y cognitiva en los niños.</p><p><strong>Qué puedes hacer:</strong> Bajo el Título VI de la Ley de Derechos Civiles, los programas con financiamiento federal deben proveer un intérprete calificado sin costo. Esto incluye la mayoría de hospitales, escuelas y agencias de servicios sociales. Solicítalo por escrito antes de tu cita.</p>'},
+      {title:'Estatus migratorio y miedo a los sistemas',body:'<p>El miedo a la deportación lleva a muchas familias inmigrantes a no acceder a servicios a los que sus hijos tienen derecho legalmente. Los estudios muestran que familias evitan hospitales, escuelas y programas gubernamentales aunque sus hijos sean ciudadanos estadounidenses.</p><p><strong>Qué puedes hacer:</strong> La ley IDEA y el ADA protegen a los niños sin importar el estatus migratorio. Los departamentos de educación especial no pueden preguntar sobre el estatus migratorio. Muchas clínicas de salud (FQHCs) no reportan a las autoridades de inmigración. Conoce tus derechos antes de evitar la atención.</p>'},
+      {title:'Falta de proveedores culturalmente competentes',body:'<p>Rios, Aleman-Tovar y Burke (2020) encontraron que las madres latinas de niños con autismo reportaron alto estrés en parte porque los proveedores no entendían su contexto cultural — malinterpretando el familismo como sobreprotección o ignorando el papel de la religión.</p><p><strong>Qué puedes hacer:</strong> Pregunta directamente a los proveedores: "¿Tiene experiencia trabajando con familias latinas?" Solicita referencias a proveedores con capacitación en competencia cultural. Los trabajadores de salud comunitarios (promotoras) pueden servir de puente.</p>'},
+      {title:'Barreras socioeconómicas y logísticas',body:'<p>Incluso cuando las familias conocen sus derechos y han encontrado buenos proveedores, persisten barreras prácticas: falta de transporte, horarios de trabajo inflexibles, sin cuidado de niños, costo de copagos y distancia de los servicios especializados.</p><p><strong>Qué puedes hacer:</strong> Muchas organizaciones de servicios de discapacidad ofrecen asistencia de transporte, tarifas escalonadas y horarios flexibles. Pregunta explícitamente sobre acomodaciones. Organizaciones como Grupo Salto pueden ayudar a navegar esta logística.</p>'}
+    ],
+    checklist:[
+      {text:'Solicita un intérprete por escrito al menos 48 horas antes de la cita',sub:'Este es tu derecho legal bajo el Título VI — documenta la solicitud.'},
+      {text:'Escribe tus 3 principales preocupaciones o preguntas la noche anterior',sub:'Los estudios muestran que las familias olvidan hasta el 80% de lo que planeaban preguntar en citas estresantes.'},
+      {text:'Trae a una persona de confianza — familiar, promotora o defensor',sub:'Tener otra persona presente mejora lo que recuerdas y reduce la ansiedad.'},
+      {text:'Pide al proveedor que repita el diagnóstico de tu hijo en lenguaje sencillo',sub:'Si no pueden explicarlo claramente, pide que lo intenten de nuevo.'},
+      {text:'Solicita todos los materiales escritos en español si están disponibles',sub:'Esto es especialmente importante para documentos del IEP e instrucciones de medicamentos.'},
+      {text:'Pregunta: "¿Qué sigue, y quién es responsable de cada paso?"',sub:'Las brechas en el seguimiento son la causa más común de retraso en casos complejos de discapacidad.'},
+      {text:'Toma notas o pide permiso para grabar la cita',sub:'La memoria es poco confiable bajo estrés. Las notas te protegen a ti y a tu hijo.'},
+      {text:'Antes de salir: confirma la fecha, hora y lugar de la próxima cita',sub:'La confusión con los horarios es una de las principales razones de citas perdidas.'}
+    ],
+    progs:[
+      {tag:'Autismo / IDD',name:'Padres en Acción (PTA)',desc:'Una intervención psicoeducativa desarrollada por Magaña, Lopez y Machalicek (2017) específicamente para padres latinos de niños con TEA. Culturalmente adaptada con los valores familiares latinos en su centro — cubre defensa de derechos, habilidades de vida diaria y estrategias de comunicación. Evaluada en Colombia por Garcia Torres et al. (2024).'},
+      {tag:'Cuidadores de demencia',name:'COCO — Cuidando a los Cuidadores Orgánicamente',desc:'Desarrollado por la Dra. Judith Rocha (2020), este programa de educación en salud para latinas que cuidan a familiares con Alzheimer usa un modelo grupal culturalmente fundamentado. Los participantes reportan reducción del estrés como cuidadoras, mejores comportamientos de salud y mayor conexión social.'},
+      {tag:'Adaptación cultural',name:'Modelo de Validez Ecológica (MVE)',desc:'Martinez-Torres et al. (2021) describen un marco para adaptar intervenciones para la comunidad latinx usando el MVE — asegurando que el lenguaje, las metáforas, el contenido, los objetivos, los métodos y el contexto se alineen con la comunidad objetivo.'}
+    ],
+    selfItems:['Salud física (¿estás recibiendo atención médica para ti mismo/a?)','Bienestar emocional (¿tienes alguien con quien hablar?)','Conexión social (¿estás evitando el aislamiento?)','Descanso y sueño (¿estás descansando suficiente?)','Establecer límites (¿puedes decir que no a veces?)'],
+    laws:[
+      {name:'Ley de Estadounidenses con Discapacidades (ADA)',tag:'Ley de derechos civiles',desc:'Prohíbe la discriminación contra personas con discapacidades en empleo, servicios públicos y lugares de acceso público. Se aplica a todos los residentes, no solo ciudadanos. La Red Nacional ADA ofrece orientación en español (1-800-949-4232).'},
+      {name:'IDEA — Ley de Educación para Individuos con Discapacidades',tag:'Ley de educación',desc:'Garantiza educación pública gratuita y apropiada (FAPE) para todos los niños con discapacidades de 3 a 21 años. Las escuelas deben evaluar, identificar y atender a los niños elegibles sin importar el estatus migratorio.'},
+      {name:'Sección 504 de la Ley de Rehabilitación',tag:'Anti-discriminación',desc:'Proporciona acomodaciones para estudiantes con discapacidades que pueden no calificar para un IEP. Cubre una gama más amplia de condiciones. Un plan 504 puede incluir tiempo extendido, ambiente tranquilo de evaluación o acomodaciones médicas.'},
+      {name:'Título VI — Ley de Derechos Civiles',tag:'Acceso al idioma',desc:'Requiere que los programas con financiamiento federal provean acceso significativo a personas con dominio limitado del inglés. Esto significa intérpretes gratuitos calificados, documentos traducidos y personal bilingüe.'}
+    ],
+    quiz:[
+      {q:'¿Puede una escuela pública preguntar sobre el estatus migratorio de una familia al evaluar a un niño para servicios de educación especial?',opts:['Sí — lo necesitan para determinar la elegibilidad','No — el estatus migratorio no es relevante para la elegibilidad bajo IDEA','Solo si el niño nació fuera de EE.UU.','Solo en ciertos estados'],ans:1,fb:'IDEA garantiza educación pública gratuita y apropiada para todos los niños con discapacidades de 3 a 21 años en EE.UU., independientemente del estatus migratorio. Las escuelas no pueden usar el estatus migratorio como factor en las decisiones de elegibilidad.'},
+      {q:'Bajo el ADA, ¿están los negocios obligados a hacer acomodaciones razonables para personas con discapacidades?',opts:['Solo para empleados, no para clientes','Sí — tanto para empleados como para clientes en la mayoría de los negocios','Solo si el negocio tiene más de 500 empleados','Solo para discapacidades físicas'],ans:1,fb:'El ADA requiere acomodaciones razonables en empleo (Título I) y en lugares de acceso público (Título III), incluyendo tiendas, restaurantes y proveedores de servicios.'},
+      {q:'Si no estás de acuerdo con el IEP de tu hijo, ¿cuál es tu primer paso formal?',opts:['Contratar a un abogado de inmediato','Escribir una carta al director','Solicitar mediación o presentar una queja de debido proceso','Aceptarlo y solicitar una revisión el año próximo'],ans:2,fb:'Bajo IDEA, los padres pueden solicitar mediación (un tercero neutral) o presentar una queja de debido proceso. Ambas son opciones gratuitas. No necesitas un abogado para comenzar este proceso.'},
+      {q:'¿Está legalmente obligado un hospital a proveer un intérprete de español sin costo para ti?',opts:['Solo si pagas por ello','No — eso solo se requiere para materiales escritos','Sí — bajo el Título VI de la Ley de Derechos Civiles, si el hospital recibe financiamiento federal','Solo en estados con políticas bilingües oficiales'],ans:2,fb:'El Título VI requiere que todos los programas con financiamiento federal — incluyendo la mayoría de hospitales y clínicas — provean intérpretes calificados gratuitos para personas con dominio limitado del inglés.'},
+      {q:'¿Qué es un "plan 504" y cómo difiere de un IEP?',opts:['Un plan 504 es más completo que un IEP','Son lo mismo','Un plan 504 provee acomodaciones sin servicios de educación especial; un IEP provee instrucción especializada','Un plan 504 es solo para adultos'],ans:2,fb:'Un plan 504 provee acomodaciones razonables para estudiantes con discapacidades que no califican para educación especial bajo IDEA. Un IEP provee instrucción especializada y es más intensivo.'},
+      {q:'¿Cuál de los siguientes NO es un derecho de los padres bajo IDEA?',opts:['Participar en reuniones del IEP','Solicitar una evaluación educativa independiente','Elegir qué escuela asistirá su hijo en cualquier distrito','Recibir documentos del IEP en su idioma nativo'],ans:2,fb:'Bajo IDEA, los padres pueden participar en reuniones, solicitar evaluaciones independientes y recibir documentos en su idioma. Sin embargo, las decisiones de ubicación escolar (qué escuela dentro del distrito) las toma el equipo del IEP.'},
+      {q:'¿Puede una familia latina con miembros indocumentados acceder a servicios de discapacidad financiados por Medicaid para su hijo nacido en EE.UU.?',opts:['No — toda la familia debe tener estatus legal','Sí — los niños nacidos en EE.UU. son ciudadanos y elegibles para servicios','Solo si los padres también aplican por separado','Solo en ciudades santuario'],ans:1,fb:'Los niños nacidos en EE.UU. son ciudadanos independientemente del estatus migratorio de sus padres. Como ciudadanos, son completamente elegibles para Medicaid, CHIP y servicios de discapacidad financiados públicamente.'}
+    ],
+    stories:[
+      {name:'María, Chicago — cuidando a su hijo con autismo',text:'María llegó a EE.UU. desde México a los 22 años. Cuando a su hijo Emiliano le diagnosticaron autismo a los 3 años, le entregaron un documento IEP en inglés y le pidieron que lo firmara. No entendió lo que estaba acordando. Durante dos años, Emiliano recibió servicios mínimos porque María no sabía que podía objetar. Entonces una promotora de una organización comunitaria local le explicó sus derechos bajo IDEA. María solicitó una nueva reunión de IEP, trajo una intérprete y abogó por servicios de análisis de comportamiento aplicado. El desarrollo de Emiliano mejoró significativamente. "No sabía que tenía voz", dice. "Ahora la uso."'},
+      {name:'Roberto, Texas — viviendo con una lesión medular',text:'Roberto, de 34 años, sufrió una lesión en un accidente de trabajo. Su empleador inicialmente negó acomodaciones y lo despidió. Su familia — incluyendo sus padres, hermanos y familia extendida — se unió a él, proporcionando cuidado diario, transporte y apoyo emocional. Su familismo fue su red de supervivencia. Pero cuando su hermana — su cuidadora principal — comenzó a mostrar señales de agotamiento, la familia tuvo que enfrentar cómo el marianismo había llevado a esperar demasiado de ella. Redistribuyeron las tareas de cuidado y se conectaron con un programa local de rehabilitación vocacional.'},
+      {name:'Carmen, Nueva York — cuidando a su madre con Alzheimer',text:'Carmen, inmigrante colombiana de 58 años, era la única angloparlante de su familia y se convirtió en la cuidadora principal de su madre, quien desarrolló Alzheimer a los 72 años. Equilibraba un trabajo de tiempo completo, dos hijos y responsabilidades de cuidado las 24 horas. Nunca se quejó. Cuando colapsó de agotamiento y fue hospitalizada, su médico identificó agotamiento del cuidador. Una trabajadora social la conectó con un programa COCO diseñado específicamente para cuidadoras latinas. El grupo le dio a Carmen permiso para nombrar su sufrimiento y compartir la responsabilidad. "No hablamos de estas cosas en nuestras familias", dice. "Pero tenemos que hacerlo."'}
+    ],
+    sti_h2:'Lo que nos dice la investigación',
+    sti_hl1:'Suárez-Balcázar et al. (2025) desarrollaron un modelo conceptual para co-crear intervenciones culturalmente adaptadas con cuidadoras inmigrantes latinas de niños con discapacidades. El modelo centra la participación comunitaria — las cuidadoras no son solo receptoras de programas sino co-diseñadoras. Este enfoque participativo lleva a mayor participación, mejores resultados y programas más sostenibles.',
+    sti_hl2:'Montenegro et al. (2022) encuestaron a cuidadores de niños autistas en toda América Latina y encontraron que el estigma y las barreras de servicio no son exclusivos de EE.UU. — son generalizados en Argentina, Colombia, Ecuador y Perú. El estigma percibido fue el predictor más fuerte de retraso en la búsqueda de ayuda.',
+    resources:[
+      {name:'Red Nacional ADA — Proyecto de Alcance en Español',desc:'Información gratuita sobre el ADA, referencias y recursos en español. Atendido por especialistas capacitados. El Episodio 122 del podcast cubre específicamente las comunidades hispanas/latinas.',tags:['Derechos','Español','Gratis'],tagClasses:['','','']},
+      {name:'Línea de Ayuda SAMHSA',desc:'Referencias gratuitas y confidenciales para salud mental y tratamiento. Disponible en español. 1-800-662-4357. Especialmente relevante para la salud mental de los cuidadores.',tags:['Salud mental','Español','Gratis'],tagClasses:['tag-coral','','']},
+      {name:'Centros de Salud Calificados Federalmente (FQHCs)',desc:'Centros de salud comunitarios con tarifas escalonadas independientemente de la capacidad de pago o el estatus migratorio. Muchos tienen personal bilingüe y promotoras. Encuentra uno en findahealthcenter.hrsa.gov.',tags:['Atención médica','Tarifa escalonada'],tagClasses:['tag-amber','tag-purple']},
+      {name:'Grupo Salto',desc:'Organización comunitaria en Chicago que empodera a latinos con discapacidades hacia la vida independiente, la defensa y los derechos. Usa un enfoque de desarrollo de capacidades desarrollado por Balcazar et al.',tags:['Defensa','Chicago','IDD'],tagClasses:['','tag-amber','tag-coral']},
+      {name:'Padres en Acción (PTA)',desc:'Capacitación para padres latinos de niños con TEA y discapacidades intelectuales/del desarrollo. Desarrollado por Magaña, Lopez y Machalicek. Disponible a través de proveedores seleccionados y universidades.',tags:['Capacitación','TEA/IDD'],tagClasses:['tag-purple','tag-coral']},
+      {name:'Rehabilitación Vocacional (VR Estatal)',desc:'Servicios de empleo y rehabilitación financiados por el estado para personas con discapacidades. Lee et al. (2023) identifican fortalezas y desafíos específicamente para clientes hispanos. Pregunta por consejeros culturalmente competentes.',tags:['Empleo','Todas las discapacidades'],tagClasses:['tag-amber','']},
+      {name:'Centros de Padres IDEA (PTIs)',desc:'Cada estado tiene un Centro de Capacitación e Información para Padres financiado federalmente que provee ayuda gratuita para navegar la educación especial. Muchos tienen personal bilingüe. Encuentra el tuyo en parentcenterhub.org.',tags:['Educación','IEP','Gratis'],tagClasses:['','tag-purple','']}
+    ],
+    qref:[
+      {tag:'Si se te niegan servicios',text:'Solicita la negación por escrito. Pregunta cuál es la base legal específica. Contacta tu organización estatal de Protección y Defensa para ayuda legal gratuita.'},
+      {tag:'Si necesitas un intérprete',text:'Informa al programador antes de tu cita. Llega temprano y vuelve a preguntar al registrarte. Si se niega, pide hablar con un defensor del paciente o supervisor.'},
+      {tag:'Si no estás de acuerdo con un IEP',text:'Escribe una carta indicando tu desacuerdo dentro de 10 días. Solicita mediación. Contacta tu Centro de Capacitación e Información para Padres (PTI) estatal para orientación gratuita.'},
+      {tag:'Si experimentas discriminación',text:'Presenta una queja ante la Oficina de Derechos Civiles del Dpto. de Educación (para escuelas) o la Oficina de Derechos Civiles del HHS (para proveedores de salud). Ambas aceptan quejas en línea y en español.'}
+    ],
+    rei_hl:'Importante: Muchas protecciones bajo el ADA, IDEA y el Título VI de la Ley de Derechos Civiles se aplican a todos los residentes de Estados Unidos independientemente del estatus migratorio. No necesitas ser ciudadano para acceder a servicios de discapacidad, educación especial en escuelas públicas o programas de salud financiados federalmente.',
+    ri_h3:'Liberación y defensa en la práctica',
+    ri_lib1:'Balcazar et al. (2012) introdujeron un marco de "liberación" para familias inmigrantes latinas de niños con discapacidades. El proceso tiene tres fases: (1) conciencia crítica — reconocer que tu hijo tiene derechos y que los sistemas deben responder; (2) desarrollo de habilidades — aprender a comunicarse con escuelas, proveedores y agencias; y (3) acción social — unirse a redes que impulsan el cambio sistémico.',
+    ri_lib2:'Este marco se ha aplicado en Chicago y otros lugares. Organizaciones como Grupo Salto usan enfoques de desarrollo de capacidades (Balcazar, Keys y Suárez-Balcázar, 2021) para ayudar a los latinos con discapacidades a desarrollar autodeterminación, navegar la vida independiente y abogar por cambios de política.'
+  }
+};
+
+let lang='en', checks={}, sliders={}, quizState={current:0,answered:false,scores:0,built:false};
+const navIds=['values','health','caregiver','rights','stories','resources'];
+
+function setLang(l){
+  lang=l;
+  document.getElementById('btn-en').classList.toggle('active',l==='en');
+  document.getElementById('btn-es').classList.toggle('active',l==='es');
+  renderAll();
+}
+
+function renderAll(){
+  const t=T[lang];
+  document.getElementById('h-eyebrow').textContent=t.eyebrow;
+  document.getElementById('h-sub').textContent=t.sub;
+  t.hs.forEach((s,i)=>document.getElementById('hs'+(i+1)).textContent=s);
+  navIds.forEach((id,i)=>document.getElementById('nav-'+id).textContent=t.nav[i]);
+  renderValues(); renderHealth(); renderCaregiver(); renderRights(); renderStories(); renderResources();
+}
+
+function showSec(id){
+  navIds.forEach(s=>{
+    document.getElementById('s-'+s).classList.remove('active');
+    document.getElementById('nav-'+s).classList.remove('active');
+  });
+  document.getElementById('s-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+}
+
+function renderValues(){
+  const t=T[lang];
+  document.getElementById('vi-intro').textContent=t.vi_intro;
+  document.getElementById('vi-h2').textContent=t.vi_h2;
+  const icons=['<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>','<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>','<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>','<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>'];
+  document.getElementById('val-grid').innerHTML=t.values.map((v,i)=>`<div class="val-card"><div class="val-icon">${icons[i]}</div><div class="val-name">${v.name}</div><div class="val-desc">${v.desc}</div><div class="val-bridge">${v.bridge}</div></div>`).join('');
+  t.vi_tags.forEach((tg,i)=>{document.getElementById('vi-tag'+(i+1)).textContent=tg;document.getElementById('vi-s'+(i+1)+'h').textContent=t.vi_sh[i];document.getElementById('vi-s'+(i+1)+'p').textContent=t.vi_sp[i];});
+  document.getElementById('vi-hl').innerHTML='<strong>'+(lang==='en'?'Key takeaway:':'Conclusión clave:')+'</strong> '+t.vi_hl.replace(/^Key takeaway: |^Conclusión clave: /,'');
+}
+
+function renderHealth(){
+  const t=T[lang];
+  document.getElementById('hi-intro').textContent=t.vi_intro.slice(0,1)==='L'?t.vi_intro:t.vi_intro;
+  document.getElementById('hi-intro').textContent=t.vi_intro;
+  const hintro=document.getElementById('hi-intro');
+  hintro.textContent=lang==='en'?'Latino families of individuals with disabilities face compounding barriers in the U.S. health and special education systems. This section examines those barriers in depth — and gives you concrete tools to navigate them.':'Las familias latinas de personas con discapacidades enfrentan barreras compuestas en los sistemas de salud y educación especial de EE.UU. Esta sección examina esas barreras en profundidad — y te da herramientas concretas para navegarlas.';
+  document.getElementById('hi-h1').textContent=lang==='en'?'Understanding the barriers':'Entendiendo las barreras';
+  document.getElementById('hi-h2').textContent=lang==='en'?'Appointment preparation checklist':'Lista de preparación para citas';
+  document.getElementById('hi-sub').textContent=lang==='en'?'Check off each item before and during your next medical or IEP appointment. Progress is saved as you go.':'Marca cada punto antes y durante tu próxima cita médica o de IEP. El progreso se guarda.';
+  document.getElementById('hi-h3').textContent=lang==='en'?'Special education and the IEP process':'Educación especial y el proceso del IEP';
+  document.getElementById('hi-iep1').textContent=lang==='en'?'Mortier & Arias (2023) documented how Latina mothers navigate special education, finding that the system often assumes families understand concepts like "IEP," "due process," and "least restrictive environment" — when in fact these are deeply technical and culturally unfamiliar. Language barriers compound the problem: parents who don\'t speak English fluently are often handed translated documents without explanation.':'Mortier y Arias (2023) documentaron cómo las madres latinas navegan la educación especial, encontrando que el sistema asume que las familias entienden conceptos como "IEP", "debido proceso" y "entorno menos restrictivo" — cuando en realidad son profundamente técnicos y culturalmente desconocidos. Las barreras de idioma agravan el problema.';
+  document.getElementById('hi-iep2').textContent=lang==='en'?'Rios & Burke (2021) identified key facilitators of positive special education experiences: having a bilingual advocate, building personal relationships with teachers (personalismo), and connecting with other Latino parents who have navigated the system. Barriers included transportation, work schedule conflicts, mistrust of government institutions, and lack of culturally adapted materials.':'Rios y Burke (2021) identificaron facilitadores clave de experiencias positivas en educación especial: tener un defensor bilingüe, construir relaciones personales con los maestros (personalismo) y conectarse con otros padres latinos que han navegado el sistema. Las barreras incluyeron transporte, conflictos de horario de trabajo y desconfianza de las instituciones gubernamentales.';
+  document.getElementById('hi-warn').innerHTML='<strong>'+(lang==='en'?'Know this:':'Sepa esto:')+'</strong> '+(lang==='en'?'Under IDEA, schools must provide evaluation, IEP documents, and meeting notices in your home language at no cost to you. If this is not happening, you have the right to request it formally and to bring a bilingual advocate to any meeting.':'Bajo IDEA, las escuelas deben proveer evaluación, documentos del IEP y avisos de reunión en tu idioma nativo sin costo. Si esto no está ocurriendo, tienes el derecho de solicitarlo formalmente y de traer un defensor bilingüe a cualquier reunión.');
+  document.getElementById('barrier-accordions').innerHTML=t.barriers.map((b,i)=>`<div class="scenario-wrap"><div class="scenario-hd" onclick="toggleAcc('b${i}')"><span class="scenario-title">${b.title}</span><span class="scenario-chevron" id="chev-b${i}">▼</span></div><div class="scenario-body" id="acc-b${i}">${b.body}</div></div>`).join('');
+  const cl=document.getElementById('checklist-wrap');
+  cl.innerHTML=t.checklist.map((c,i)=>`<div class="checklist-item"><div class="cb${checks['cl'+i]?' on':''}" onclick="toggleCB('cl${i}',this)"></div><div><div class="cl-text">${c.text}</div><div class="cl-sub">${c.sub}</div></div></div>`).join('');
+}
+
+function renderCaregiver(){
+  const t=T[lang];
+  document.getElementById('ci-intro').textContent=lang==='en'?'Caregiving is an act of profound love — and also one of the most demanding roles a person can hold. This section goes deep on the physical, emotional, and systemic dimensions of caregiving in Latino families, and offers evidence-based strategies for sustaining yourself while caring for others.':'El cuidado es un acto de amor profundo — y también uno de los roles más exigentes que una persona puede tener. Esta sección profundiza en las dimensiones físicas, emocionales y sistémicas del cuidado en familias latinas, y ofrece estrategias basadas en evidencia para sostenerte mientras cuidas a otros.';
+  document.getElementById('ci-h1').textContent=lang==='en'?'The caregiver experience in Latino families':'La experiencia del cuidador en familias latinas';
+  document.getElementById('ci-alz-h').textContent=lang==='en'?'Caring for a parent with dementia':'Cuidando a un padre con demencia';
+  document.getElementById('ci-alz-p').textContent=lang==='en'?'Jaldin et al. (2023) studied Latino family caregivers of individuals with Alzheimer\'s and related dementias, finding that familismo shaped how families understood the caregiver role — viewing it as a moral obligation and source of meaning rather than a burden. However, this framing also made it harder for caregivers to set limits or accept outside help. Culturally tailored support must honor this commitment while offering practical relief.':'Jaldin et al. (2023) estudiaron a cuidadores familiares latinos de personas con Alzheimer y demencias relacionadas, encontrando que el familismo influía en cómo las familias entendían el rol de cuidador — viéndolo como una obligación moral y fuente de significado. Sin embargo, este enfoque también dificultaba que los cuidadores establecieran límites o aceptaran ayuda externa.';
+  document.getElementById('ci-dad-h').textContent=lang==='en'?'Fathers with a child with a disability':'Padres con un hijo con discapacidad';
+  document.getElementById('ci-dad-p').textContent=lang==='en'?'Mogro-Wilson et al. (2024) found that Latino cultural concepts of fatherhood — machismo, being the provider and protector — significantly predicted stigma levels among fathers of children with disabilities. Fathers who felt their child\'s disability "reflected on them" reported higher stigma and lower service engagement. Programs that address Latino fatherhood identity directly lead to better family outcomes.':'Mogro-Wilson et al. (2024) encontraron que los conceptos culturales latinos de paternidad — el machismo, ser el proveedor y protector — predijeron significativamente los niveles de estigma entre padres de niños con discapacidades. Los programas que abordan directamente la identidad paterna latina llevan a mejores resultados familiares.';
+  document.getElementById('ci-h2').textContent=lang==='en'?'Evidence-based programs for Latino caregivers':'Programas basados en evidencia para cuidadores latinos';
+  document.getElementById('prog-cards').innerHTML=t.progs.map(p=>`<div class="card"><div class="card-tag">${p.tag}</div><div class="h3">${p.name}</div><p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75;margin-top:.4rem">${p.desc}</p></div>`).join('');
+  document.getElementById('ci-h3').textContent=lang==='en'?'Caregiver self-assessment':'Autoevaluación del cuidador';
+  document.getElementById('ci-self-sub').textContent=lang==='en'?'Rate how you are currently doing in each area (1 = struggling, 5 = doing well). This is for reflection only.':'Califica cómo estás actualmente en cada área (1 = con dificultades, 5 = bien). Solo para reflexión.';
+  document.getElementById('self-assess').innerHTML=t.selfItems.map((item,i)=>{
+    const val=sliders['s'+i]||3;
+    return `<div style="margin-bottom:.85rem"><div style="font-size:13px;color:var(--color-text-primary);margin-bottom:.35rem">${item}</div><div style="display:flex;align-items:center;gap:10px"><input type="range" min="1" max="5" step="1" value="${val}" oninput="updateSlider('s${i}',this.value,this.parentElement.querySelector('span'))" style="flex:1"><span style="font-size:13px;font-weight:500;min-width:16px;color:${val<=2?'#D85A30':val>=4?'#1D9E75':'var(--color-text-secondary)'}">${val}</span></div><div style="height:4px;background:var(--color-background-secondary);border-radius:2px;margin-top:4px"><div style="height:100%;width:${((val-1)/4*100).toFixed(0)}%;background:${val<=2?'#D85A30':val>=4?'#1D9E75':'#BA7517'};border-radius:2px;transition:width .2s" id="sbar-s${i}"></div></div></div>`;
+  }).join('');
+  document.getElementById('ci-crisis').innerHTML='<strong>'+(lang==='en'?'If you are in crisis:':'Si estás en crisis:')+'</strong> '+(lang==='en'?'Caregiver burnout is a recognized medical condition. If you feel chronically exhausted, detached from your loved one, or hopeless, please reach out to a promotora or call SAMHSA\'s helpline: 1-800-662-4357 (free, confidential, available in Spanish).':'El agotamiento del cuidador es una condición médica reconocida. Si te sientes crónicamente agotado/a, desconectado/a de tu ser querido o sin esperanza, por favor comunícate con una promotora o llama a la línea de ayuda de SAMHSA: 1-800-662-4357 (gratis, confidencial, disponible en español).');
+}
+
+function renderRights(){
+  const t=T[lang];
+  document.getElementById('ri-intro').textContent=lang==='en'?'The U.S. legal system provides significant protections for individuals with disabilities and their families — regardless of immigration status. Many Latino families don\'t know these rights exist or how to use them. This section covers the major laws, common misunderstandings, and includes an interactive quiz.':'El sistema legal de EE.UU. brinda protecciones significativas para personas con discapacidades y sus familias — independientemente del estatus migratorio. Muchas familias latinas no saben que estos derechos existen. Esta sección cubre las leyes principales y un cuestionario interactivo.';
+  document.getElementById('ri-h1').textContent=lang==='en'?'Key laws you should know':'Leyes clave que debes conocer';
+  document.getElementById('laws-grid').innerHTML=t.laws.map(l=>`<div class="card"><div class="card-tag">${l.tag}</div><div class="h3">${l.name}</div><p style="font-size:13px;color:var(--color-text-secondary);line-height:1.75;margin-top:.4rem">${l.desc}</p></div>`).join('');
+  document.getElementById('ri-h2').textContent=lang==='en'?'Interactive rights quiz':'Cuestionario interactivo de derechos';
+  document.getElementById('ri-quizsub').textContent=lang==='en'?'7 questions. Each question includes a full explanation. Take it as many times as you like.':'7 preguntas. Cada pregunta incluye una explicación completa. Puedes hacerlo todas las veces que quieras.';
+  quizState={current:0,answered:false,scores:0,built:false};
+  renderQuiz();
+  document.getElementById('ri-h3').textContent=t.ri_h3;
+  document.getElementById('ri-lib1').textContent=t.ri_lib1;
+  document.getElementById('ri-lib2').textContent=t.ri_lib2;
+}
+
+function renderQuiz(){
+  const t=T[lang];
+  const total=t.quiz.length;
+  const pct=Math.round((quizState.current/total)*100);
+  document.getElementById('quiz-wrap').innerHTML=`<div class="quiz-prog"><div class="quiz-prog-fill" style="width:${pct}%"></div></div><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:1rem">${lang==='en'?'Question':'Pregunta'} ${quizState.current+1} ${lang==='en'?'of':'de'} ${total}</div><div class="quiz-q">${t.quiz[quizState.current].q}</div><div class="quiz-opts">${t.quiz[quizState.current].opts.map((o,i)=>`<button class="qopt" onclick="answerQuiz(${i})">${o}</button>`).join('')}</div><div class="qfb" id="qfb">${t.quiz[quizState.current].fb}</div><div style="display:flex;gap:8px;margin-top:.5rem"><button class="btn btn-g" id="qnext" style="display:none" onclick="nextQuestion()">${quizState.current<total-1?(lang==='en'?'Next →':'Siguiente →'):(lang==='en'?'See results':'Ver resultados')}</button></div>`;
+}
+
+function answerQuiz(i){
+  if(quizState.answered) return;
+  quizState.answered=true;
+  const t=T[lang];
+  const correct=t.quiz[quizState.current].ans;
+  document.querySelectorAll('.qopt').forEach((b,j)=>{b.disabled=true;if(j===correct)b.classList.add('correct');else if(j===i)b.classList.add('wrong');});
+  if(i===correct) quizState.scores++;
+  document.getElementById('qfb').classList.add('show');
+  document.getElementById('qnext').style.display='inline-block';
+}
+
+function nextQuestion(){
+  const t=T[lang];
+  if(quizState.current<t.quiz.length-1){
+    quizState.current++;
+    quizState.answered=false;
+    renderQuiz();
+  } else {
+    const pct=Math.round((quizState.scores/t.quiz.length)*100);
+    const color=pct>=80?'#1D9E75':pct>=50?'#BA7517':'#D85A30';
+    document.getElementById('quiz-wrap').innerHTML=`<div style="text-align:center;padding:1.5rem 0"><div style="font-size:28px;font-weight:500;color:${color};margin-bottom:.5rem">${quizState.scores}/${t.quiz.length}</div><div style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.25rem">${lang==='en'?'You scored '+pct+'% — knowledge is power.':'Obtuviste '+pct+'% — el conocimiento es poder.'}</div><button class="btn btn-g" onclick="quizState={current:0,answered:false,scores:0};renderQuiz()">${lang==='en'?'Retake quiz':'Repetir cuestionario'}</button></div>`;
+  }
+}
+
+function renderStories(){
+  const t=T[lang];
+  document.getElementById('sti-intro').textContent=lang==='en'?'Behind every statistic is a family. These composite narratives — drawn from research themes in your course — illustrate the real challenges and strengths of Latino families navigating disability. Names are fictional; experiences are drawn from documented studies.':'Detrás de cada estadística hay una familia. Estas narrativas compuestas — basadas en temas de investigación de tu curso — ilustran los desafíos reales y las fortalezas de las familias latinas que navegan la discapacidad. Los nombres son ficticios; las experiencias están basadas en estudios documentados.';
+  document.getElementById('stories-list').innerHTML=t.stories.map(s=>`<div class="story-card"><div class="story-name">${s.name}</div><div class="story-text">${s.text}</div></div>`).join('');
+  document.getElementById('sti-h2').textContent=t.sti_h2;
+  document.getElementById('sti-hl1').innerHTML='<strong>Suárez-Balcázar et al. (2025)</strong> '+t.sti_hl1.replace(/^Suárez-Balcázar et al\. \(2025\) /,'');
+  document.getElementById('sti-hl2').innerHTML='<strong>Montenegro et al. (2022)</strong> '+t.sti_hl2.replace(/^Montenegro et al\. \(2022\) /,'');
+}
+
+function renderResources(){
+  const t=T[lang];
+  document.getElementById('rei-intro').textContent=lang==='en'?'Below is a curated list of organizations, hotlines, and programs specifically serving Latino families navigating disability. All resources are either Spanish-language accessible or have bilingual staff.':'A continuación hay una lista curada de organizaciones, líneas de ayuda y programas que sirven específicamente a familias latinas que navegan la discapacidad. Todos los recursos son accesibles en español o tienen personal bilingüe.';
+  const svgPhone='<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.35 2 2 0 0 1 3.6 1.13h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.18 6.18l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+  const svgHosp='<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
+  const svgGroup='<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+  const svgBook='<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>';
+  const svgWork='<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>';
+  const icons2=[svgPhone,svgPhone,svgHosp,svgGroup,svgBook,svgWork,svgBook];
+  document.getElementById('res-list').innerHTML=`<div class="card-tag">${lang==='en'?'Organizations & hotlines':'Organizaciones y líneas de ayuda'}</div>`+t.resources.map((r,i)=>`<div class="res-row"><div class="res-ico">${icons2[i]}</div><div style="flex:1"><div class="res-name">${r.name}</div><div class="res-desc">${r.desc}</div><div class="res-tags">${r.tags.map((tg,j)=>`<span class="tag ${r.tagClasses[j]}">${tg}</span>`).join('')}</div></div></div>`).join('');
+  document.getElementById('rei-h2').textContent=lang==='en'?'Navigating the system — quick reference':'Navegando el sistema — referencia rápida';
+  document.getElementById('quickref-grid').innerHTML=t.qref.map(q=>`<div class="card"><div class="card-tag">${q.tag}</div><p style="font-size:13px;color:var(--color-text-secondary);line-height:1.7">${q.text}</p></div>`).join('');
+  document.getElementById('rei-hl').innerHTML='<strong>'+(lang==='en'?'Important:':'Importante:')+'</strong> '+t.rei_hl.replace(/^Important: |^Importante: /,'');
+}
+
+function toggleAcc(id){
+  const body=document.getElementById('acc-'+id);
+  const chev=document.getElementById('chev-'+id);
+  const open=body.classList.toggle('open');
+  chev.classList.toggle('open',open);
+}
+
+function toggleCB(key,el){
+  checks[key]=!checks[key];
+  el.classList.toggle('on',checks[key]);
+}
+
+function updateSlider(key,val,span){
+  sliders[key]=parseInt(val);
+  span.textContent=val;
+  span.style.color=val<=2?'#D85A30':val>=4?'#1D9E75':'var(--color-text-secondary)';
+  const bar=document.getElementById('sbar-'+key);
+  if(bar){bar.style.width=(((val-1)/4)*100).toFixed(0)+'%';bar.style.background=val<=2?'#D85A30':val>=4?'#1D9E75':'#BA7517';}
+}
+
+renderAll();
+</script>
